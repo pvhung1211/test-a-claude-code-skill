@@ -21,7 +21,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: install deps
-        run: npm ci
+        run: pnpm install --frozen-lockfile 
       - name: run lint
         run: npm run lint
   test:
@@ -42,7 +42,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: install deps
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: run test
         run: npm run test
   deploy:
@@ -63,7 +63,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: install deps
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: build source
         run: npm run build
       - name: deploy
