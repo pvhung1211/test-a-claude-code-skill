@@ -1,0 +1,64 @@
+name: deploy
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: setup node
+        uses: actions/setup-node@v6
+      - name: cache deps
+        uses: actions/cache@v5
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: install deps
+        run: npm ci
+      - name: run lint
+        run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: setup node
+        uses: actions/setup-node@v6
+      - name: cache deps
+        uses: actions/cache@v5
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: install deps
+        run: npm ci
+      - name: run test
+        run: npm run test
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: setup node
+        uses: actions/setup-node@v6
+      - name: cache deps
+        uses: actions/cache@v5
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: install deps
+        run: npm ci
+      - name: build source
+        run: npm run build
+      - name: deploy
+        run: echo "Deploying to production..."
