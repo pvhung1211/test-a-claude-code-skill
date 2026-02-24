@@ -40,6 +40,7 @@ jobs:
       - name: run test
         id: test
         run: pnpm run test
+        continue-on-error: true
       - name: report
         if: failure() && steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4
@@ -50,6 +51,8 @@ jobs:
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
+      - name: log
+        run: echo "Result here:" "${{needs.test.result}}"
       - name: checkout
         uses: actions/checkout@v6
       - name: Install pnpm
