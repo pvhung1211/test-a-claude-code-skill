@@ -20,7 +20,7 @@ jobs:
       - name: install deps
         run: pnpm install --frozen-lockfile 
       - name: run lint
-        run: npm run lint
+        run: pnpm run lint
   test:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +38,7 @@ jobs:
       - name: install deps
         run: pnpm install --frozen-lockfile
       - name: run test
-        run: npm run test
+        run: pnpm run test
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +56,6 @@ jobs:
       - name: install deps
         run: pnpm install --frozen-lockfile
       - name: build source
-        run: npm run build
+        run: pnpm run build
       - name: deploy
         run: echo "Deploying to production..."
