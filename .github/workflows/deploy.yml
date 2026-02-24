@@ -41,7 +41,7 @@ jobs:
         id: test
         run: pnpm run test
       - name: report
-        if: steps.test.outcome == 'failure'
+        if: failure() && steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-report
