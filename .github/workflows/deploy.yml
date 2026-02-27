@@ -1,7 +1,9 @@
 name: deploy
 on:
-  pull_request:
-    branches: [main]
+  # pull_request:
+  #   branches: [main]
+  push:
+    
 
 jobs:
   lint:
@@ -25,10 +27,11 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
     with: 
-      node-versions: "[22, 8]"
+      node-versions: "[22, 8, 20]"
   deploy:
     needs: [lint, test]
     runs-on: ubuntu-latest
+    if: ! contains(github.event.head_commit.message, '[skip deploy]')
     steps:
       - name: log
         run: echo "Result here:" "${{needs.test.outputs.test-path}}"
