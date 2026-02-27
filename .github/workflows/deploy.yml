@@ -30,6 +30,8 @@ jobs:
         node-version: [22, 8]
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v6
       - name: test
         uses: ./.github/workflows/test.yml
         with:
