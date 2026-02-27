@@ -8,10 +8,14 @@ on:
       pnpm-version:
         default: "10"
         type: string
-      
+    outputs:
+      test-path: 
+        value: ${{jobs.test.outputs.ok}}
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.test.outputs.test-path }}
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -29,7 +33,7 @@ jobs:
       - name: run test
         id: test
         run: |
-          echo "test-path=test-node-version-${{inputs.node-version}}.json" >> $GITHUB_OUTPUT
+          echo "test-path=test-node-version-${{inputs.node-version}}" >> $GITHUB_OUTPUT
           pnpm run test
         continue-on-error: true
       - run: | 
@@ -38,5 +42,5 @@ jobs:
         if: steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4 # what if multiple artifacts are uploaded
         with:
-          name: test-report
-          path: ${{steps.test.outputs.test-path}}
+          name: ${{steps.test.outputs.test-path}}
+          path: test.json

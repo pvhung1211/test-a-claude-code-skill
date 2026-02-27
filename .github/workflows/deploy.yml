@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: log
-        run: echo "Result here:" "${{needs.test.result}}"
+        run: echo "Result here:" "${{needs.test.outputs.test-path}}"
       - name: checkout
         uses: actions/checkout@v6
       - name: Install pnpm
