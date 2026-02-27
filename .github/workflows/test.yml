@@ -1,0 +1,40 @@
+name: test
+on:
+  workflow_call: 
+    inputs:
+      node-version:
+        required: true
+        type: number
+      pnpm-version:
+        default: "10"
+        type: string
+      
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{inputs.pnpm-version}}
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'pnpm'
+      - name: install deps
+        run: pnpm install --frozen-lockfile
+      - name: run test
+        id: test
+        run: |
+          pnpm run test
+          echo "test-path=test-node-version-${{inputs.node-version}}.json" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      - name: report
+        if: steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v4 # what if multiple artifacts are uploaded
+        with:
+          name: test-report
+          path: ${{steps.test.outputs.test-path}}

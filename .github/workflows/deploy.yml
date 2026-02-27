@@ -24,36 +24,16 @@ jobs:
         run: pnpm run lint
   test:
     continue-on-error: true
-    
     strategy:
       fail-fast: false
       matrix: 
         node-version: [22, 8]
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - name: setup node
-        uses: actions/setup-node@v6
+      - name: test
+        uses: ./.github/workflows/test.yml
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: install deps
-        run: pnpm install --frozen-lockfile
-      - name: run test
-        id: test
-        run: pnpm run test
-        continue-on-error: true
-      - name: report
-        if: steps.test.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: test.json
   deploy:
     needs: [lint, test]
     runs-on: ubuntu-latest
