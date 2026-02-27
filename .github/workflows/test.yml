@@ -2,9 +2,9 @@ name: test
 on:
   workflow_call: 
     inputs:
-      node-version:
+      node-versions:
         required: true
-        type: number
+        type: string
       pnpm-version:
         default: "10"
         type: string
@@ -13,6 +13,10 @@ on:
         value: ${{jobs.test.outputs.ok}}
 jobs:
   test:
+    strategy:
+        fail-fast: false
+        matrix: 
+          node-version: ${{fromJson(inputs.node-versions)}}
     runs-on: ubuntu-latest
     outputs:
       ok: ${{ steps.test.outputs.test-path }}
@@ -26,14 +30,14 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - name: install deps
         run: pnpm install --frozen-lockfile
       - name: run test
         id: test
         run: |
-          echo "test-path=test-node-version-${{inputs.node-version}}" >> $GITHUB_OUTPUT
+          echo "test-path=test-node-version-${{matrix.node-version}}" >> $GITHUB_OUTPUT
           pnpm run test
         continue-on-error: true
       - run: | 
