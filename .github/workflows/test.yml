@@ -32,6 +32,8 @@ jobs:
           pnpm run test
           echo "test-path=test-node-version-${{inputs.node-version}}.json" >> $GITHUB_OUTPUT
         continue-on-error: true
+      - run: | 
+          echo "test result: ${{steps.test.outputs.test-path}}"
       - name: report
         if: steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4 # what if multiple artifacts are uploaded
