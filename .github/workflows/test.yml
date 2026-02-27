@@ -30,7 +30,7 @@ jobs:
         id: test
         run: |
           pnpm run test
-          echo "test-path=test-node-version-${{inputs.node-version}}.json" >> $GITHUB_OUTPUT
+          echo "test-path=test-node-version.json" >> $GITHUB_OUTPUT
         continue-on-error: true
       - run: | 
           echo "test result: ${{steps.test.outputs.test-path}}"
